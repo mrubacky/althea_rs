@@ -12,15 +12,15 @@ use rouille::Request;
 use rouille::input;
 
 pub fn listen_for_key_exchange( tx: mpsc::Sender<String>) {
-
+    #[derive(RustcDecodable)]
+    struct Json {
+        pubkey: String,
+        eth_address: String
+    }
+    
     let mutex = Arc::new(Mutex::new(tx));
     thread::spawn(move ||{
         rouille::start_server("[::]:11498", move |request| {
-            #[derive(RustcDecodable)]
-            struct Json {
-                pubkey: String,
-                eth_address: String
-            }
             let json : Json = try_or_400!(input::json_input(request)); 
             mutex.lock().unwrap().send(json.pubkey).unwrap();
             Response::text("key")

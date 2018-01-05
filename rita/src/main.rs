@@ -4,6 +4,7 @@ extern crate babel_monitor;
 
 extern crate traffic_watcher;
 extern crate debt_keeper;
+extern crate tunnel_manager;
 
 use std::process;
 
@@ -84,4 +85,12 @@ fn main() {
     for received in rx {
         println!("Got: {}", received);
     }
+
+    let tx2 = tx.clone();
+    tunnel_manager::listen_for_key_exchange(tx2);
+
+    for received in rx {
+        println!("key: {}" received);
+    }
+    
 }
