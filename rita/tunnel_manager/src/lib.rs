@@ -1,13 +1,31 @@
-
+#[macro_use]
 extern crate rouille;
 
-use rouille;
-use std::thread;
-use std::sync::{Arc};
-use std::sync::mpsc;
+extern crate debt_keeper;
+extern crate rustc_serialize;
 
-pub fn listen_for_key_exchange<T>(&tx: mpsc::Sender<T>){
-    
+use std::thread;
+use std::sync::{Arc, Mutex};
+use std::sync::mpsc;
+use rouille::Response;
+use rouille::Request;
+use rouille::input;
+
+pub fn listen_for_key_exchange( tx: mpsc::Sender<String>) {
+
+    let mutex = Arc::new(Mutex::new(tx));
+    thread::spawn(move ||{
+        rouille::start_server("[::]:11498", move |request| {
+            #[derive(RustcDecodable)]
+            struct Json {
+                pubkey: String,
+                eth_address: String
+            }
+            let json : Json = try_or_400!(input::json_input(request)); 
+            mutex.lock().unwrap().send(json.pubkey).unwrap();
+            Response::text("key")
+        });
+    });
 }
 
 #[cfg(test)]

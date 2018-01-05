@@ -4,3 +4,6 @@ version = "0.1.0"
 authors = ["Michael Rubacky <michael.rubacky@gmail.com>"]
 
 [dependencies]
+rouille = "1.0.3"
+debt_keeper = { path = "../debt_keeper"}
+rustc-serialize = "0.3.24"
