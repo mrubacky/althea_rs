@@ -56,9 +56,10 @@ fn main() {
 
     let mut ki = KernelInterface {};
 
-    let mut babel = Babel::new(&"[::1]:8080".parse().unwrap());
+    //let mut babel = Babel::new(&"[::1]:8080".parse().unwrap());
 
     let tx1 = mpsc::Sender::clone(&tx);
+    /*
     thread::spawn(move || {
         while true {
             tx1.send(format!(
@@ -67,7 +68,7 @@ fn main() {
             ));
         };
     });
-
+    */
     thread::spawn(move || {
         let vals = vec![
             String::from("more"),
@@ -77,20 +78,20 @@ fn main() {
         ];
 
         for val in vals {
-            tx.send(val).unwrap();
+            tx1.send(val).unwrap();
             thread::sleep(Duration::from_secs(1));
         }
     });
-
+    /*
     for received in rx {
         println!("Got: {}", received);
     }
-
+    */
     let tx2 = tx.clone();
     tunnel_manager::listen_for_key_exchange(tx2);
 
     for received in rx {
-        println!("key: {}" received);
+        println!("key: {}", received);
     }
     
 }
