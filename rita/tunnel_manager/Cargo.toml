@@ -1,0 +1,6 @@
+[package]
+name = "tunnel_manager"
+version = "0.1.0"
+authors = ["Michael Rubacky <michael.rubacky@gmail.com>"]
+
+[dependencies]
